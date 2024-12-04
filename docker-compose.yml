@@ -1,0 +1,37 @@
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    networks:
+      - app
+    depends_on:
+      - mongo
+
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      MONGO_URL: mongo:27017
+      MONGO_DB: todo
+      MONGO_COLLECTION: todos
+    ports:
+      - "3000:3000"
+    networks:
+      - app
+    depends_on:
+      - mongo
+  
+  mongo:
+    container_name: mongo
+    image: mongo:4.4.6
+    networks:
+      - app
+
+networks:
+  app:
